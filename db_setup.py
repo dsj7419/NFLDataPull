@@ -1,6 +1,10 @@
 import os
 import psycopg2
+import logging
 from dotenv import load_dotenv
+
+# Setup basic configuration for logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # Load environment variables from .env file
 load_dotenv()
@@ -15,7 +19,7 @@ def create_tables():
         """
         CREATE TABLE IF NOT EXISTS teams (
             team_id SERIAL PRIMARY KEY,
-            slug VARCHAR(255),
+            slug VARCHAR(255) UNIQUE,
             abbreviation VARCHAR(10),
             display_name VARCHAR(255),
             short_display_name VARCHAR(255),
@@ -60,12 +64,12 @@ def create_tables():
         # Create table one by one
         for command in commands:
             cur.execute(command)
-        # Close communication with the PostgreSQL database server
-        cur.close()
         # Commit the changes
         conn.commit()
+        logging.info("Tables created successfully")
     except (Exception, psycopg2.DatabaseError) as error:
-        print(error)
+        logging.error(f"An error occurred: {error}")
+        conn.rollback()
     finally:
         if conn is not None and not conn.closed:
             conn.close()

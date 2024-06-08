@@ -22,6 +22,9 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="api_handler.py" />
+    <Compile Include="app.py" />
+    <Compile Include="db_manager.py" />
     <Compile Include="db_setup.py" />
     <Compile Include="fetch_teams.py" />
   </ItemGroup>
