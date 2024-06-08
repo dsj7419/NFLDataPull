@@ -41,7 +41,7 @@ def main():
         else:
             details = db_manager.get_team_details(user_input)  # Use the original case input for team details
             if details:
-                print_details(details)  # Use the new print_details function
+                print_details(details)
             else:
                 print("No details found for the team.")
 
