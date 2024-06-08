@@ -6,10 +6,10 @@ from dotenv import load_dotenv
 load_dotenv()  # Load environment variables from .env file
 
 async def fetch_teams(session):
-    url = "https://sportspage-feeds.p.rapidapi.com/teams"
+    url = "https://nfl-api1.p.rapidapi.com/nflteamlist"
     headers = {
         'x-rapidapi-key': os.getenv('RAPIDAPI_KEY'),
-        'x-rapidapi-host': "sportspage-feeds.p.rapidapi.com"
+        'x-rapidapi-host': "nfl-api1.p.rapidapi.com"
     }
     async with session.get(url, headers=headers) as response:
         return await response.json()  # Parse JSON response
