@@ -67,7 +67,7 @@ def create_tables():
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)
     finally:
-        if conn is not closed:
+        if conn is not None and not conn.closed:
             conn.close()
 
 if __name__ == '__main__':
