@@ -69,10 +69,13 @@ def create_tables():
         logging.info("Tables created successfully")
     except (Exception, psycopg2.DatabaseError) as error:
         logging.error(f"An error occurred: {error}")
-        conn.rollback()
+        if conn:
+            conn.rollback()
     finally:
-        if conn is not None and not conn.closed:
-            conn.close()
+        if conn is not None:
+            if not conn.closed:
+                conn.close()
+            logging.info("Database connection closed.")
 
 if __name__ == '__main__':
     create_tables()
