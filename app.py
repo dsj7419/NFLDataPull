@@ -1,6 +1,11 @@
 import asyncio
 from api_handler import APIHandler
 from db_manager import DatabaseManager
+from tabulate import tabulate
+
+def print_details(details):
+    headers = ['ID', 'Slug', 'Abbrev.', 'Display Name', 'Short Name', 'Name', 'Nickname', 'Location', 'Active', 'All-Star']
+    print(tabulate(details, headers=headers, tablefmt='pretty'))
 
 async def update_data():
     api_handler = APIHandler()
@@ -27,8 +32,7 @@ def main():
         else:
             details = db_manager.get_team_details(user_input)  # Use the original case input for team details
             if details:
-                for detail in details:
-                    print(detail)
+                print_details(details)  # Use the new print_details function
             else:
                 print("No details found for the team.")
 
