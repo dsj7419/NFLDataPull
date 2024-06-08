@@ -6,6 +6,14 @@ from tabulate import tabulate
 def print_details(details):
     headers = ['ID', 'Slug', 'Abbrev.', 'Display Name', 'Short Name', 'Name', 'Nickname', 'Location', 'Active', 'All-Star']
     print(tabulate(details, headers=headers, tablefmt='pretty'))
+    
+def print_team_list(teams):
+    headers = ['ID', 'Display Name', 'Short Name']
+    if teams and all(len(team) == 3 for team in teams):
+        print(tabulate(teams, headers=headers, tablefmt='pretty'))
+    else:
+        print("No teams available or data is malformed.")
+
 
 async def update_data():
     api_handler = APIHandler()
@@ -25,10 +33,11 @@ def main():
         elif command == 'update':
             asyncio.run(update_data())
         elif command == 'list teams':
-            team_names = db_manager.list_all_teams()
-            print("Available teams:")
-            for name in team_names:
-                print(name)
+            team_list = db_manager.list_all_teams()
+            if team_list:
+                print_team_list(team_list)
+            else:
+                print("No teams available.")
         else:
             details = db_manager.get_team_details(user_input)  # Use the original case input for team details
             if details:

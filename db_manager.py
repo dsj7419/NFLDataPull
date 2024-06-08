@@ -64,11 +64,12 @@ class DatabaseManager:
             return result
      
     def list_all_teams(self):
-        """Retrieve and return a list of all team names."""
+        """Retrieves and returns a list of all teams."""
         with self.conn.cursor() as cursor:
-            cursor.execute("SELECT display_name FROM teams;")
-            teams = cursor.fetchall()
-            return [team[0] for team in teams]
+            cursor.execute("SELECT team_id, display_name, short_display_name FROM teams ORDER BY display_name;")
+            team_list = cursor.fetchall()
+            return team_list
+
 
     def close(self):
         """Closes the database connection."""
