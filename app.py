@@ -10,15 +10,22 @@ async def update_data():
     print("Data updated successfully.")
 
 def main():
+    db_manager = DatabaseManager()  # Initialize it once for all commands
     while True:
-        command = input("Enter command (update, team name, or exit): ").strip()
-        if command.lower() == 'exit':
+        user_input = input("Enter command (update, team name, list teams, or exit): ").strip()
+        command = user_input.lower()  # Use a lowercase version for command checking
+
+        if command == 'exit':
             break
-        elif command.lower() == 'update':
+        elif command == 'update':
             asyncio.run(update_data())
+        elif command == 'list teams':
+            team_names = db_manager.list_all_teams()
+            print("Available teams:")
+            for name in team_names:
+                print(name)
         else:
-            db_manager = DatabaseManager()
-            details = db_manager.get_team_details(command)
+            details = db_manager.get_team_details(user_input)  # Use the original case input for team details
             if details:
                 for detail in details:
                     print(detail)

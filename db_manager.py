@@ -1,6 +1,10 @@
 import psycopg2
 import os
 from dotenv import load_dotenv
+import logging
+
+# Setup logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # Load environment variables
 load_dotenv()
@@ -45,12 +49,26 @@ class DatabaseManager:
 
             # Commit the transaction
             self.conn.commit()
+            logging.info("Teams data updated successfully.")
 
     def get_team_details(self, team_name):
-        """Retrieves and returns details of a specific team by its display name."""
+        """Retrieves and returns details of a specific team by a partial match of its display name."""
         with self.conn.cursor() as cursor:
-            cursor.execute("SELECT * FROM teams WHERE display_name = %s;", (team_name,))
-            return cursor.fetchall()
+            # Use ILIKE for case-insensitive partial matching
+            cursor.execute("SELECT * FROM teams WHERE display_name ILIKE %s;", ('%' + team_name + '%',))
+            result = cursor.fetchall()
+            if result:
+                logging.info(f"Details found for {team_name}: {result}")
+            else:
+                logging.info(f"No details found for {team_name}")
+            return result
+     
+    def list_all_teams(self):
+        """Retrieve and return a list of all team names."""
+        with self.conn.cursor() as cursor:
+            cursor.execute("SELECT display_name FROM teams;")
+            teams = cursor.fetchall()
+            return [team[0] for team in teams]
 
     def close(self):
         """Closes the database connection."""
